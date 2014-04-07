@@ -234,7 +234,7 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
         $query[] = '`enabled` INT(5) NOT NULL DEFAULT \'0\', ';
         $query[] = '`order_id` BIGINT(19) NOT NULL DEFAULT \'0\', ';
         $query[] = '`customer_id` BIGINT(19) NOT NULL DEFAULT \'0\', ';
-        $query[] = '`question` TEXT NOT NULL DEFAULT, ';
+        $query[] = '`message` TEXT NOT NULL, ';
         $query[] = 'PRIMARY KEY (`order_return_id`) ';
         $query[] = ') ';
         $query[] = 'ENGINE = InnoDB ';
@@ -285,9 +285,9 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
         $query[] = '`published` DATETIME NOT NULL DEFAULT \'0001-01-01 00:00:00\', ';
         $query[] = '`updated` DATETIME NOT NULL DEFAULT \'0001-01-01 00:00:00\', ';
         $query[] = '`enabled` INT(5) NOT NULL DEFAULT \'0\', ';
+        $query[] = '`name` varchar(255) NOT NULL, ';
         $query[] = '`product_quantity` BIGINT(19) NOT NULL DEFAULT \'0\', ';
         $query[] = '`price` DECIMAL(17,2) NOT NULL DEFAULT \'0.00\', ';
-        $query[] = '`name` varchar(255) NOT NULL, ';
         $query[] = 'PRIMARY KEY (`product_id`) ';
         $query[] = ') ';
         $query[] = 'ENGINE = InnoDB ';

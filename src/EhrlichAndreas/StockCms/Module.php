@@ -395,9 +395,9 @@ class EhrlichAndreas_StockCms_Module extends EhrlichAndreas_AbstractCms_Module
             $params['enabled'] = '1';
         }
         
-        if (! isset($params['']))
+        if (! isset($params['customer_id']))
         {
-            $params[''] = '';
+            $params['customer_id'] = '0';
         }
 		
 		$function = 'Cart';
@@ -433,9 +433,14 @@ class EhrlichAndreas_StockCms_Module extends EhrlichAndreas_AbstractCms_Module
             $params['enabled'] = '1';
         }
         
-        if (! isset($params['']))
+        if (! isset($params['cart_id']))
         {
-            $params[''] = '';
+            $params['cart_id'] = '0';
+        }
+        
+        if (! isset($params['product_id']))
+        {
+            $params['product_id'] = '0';
         }
 		
 		$function = 'CartProduct';
@@ -471,9 +476,39 @@ class EhrlichAndreas_StockCms_Module extends EhrlichAndreas_AbstractCms_Module
             $params['enabled'] = '1';
         }
         
-        if (! isset($params['']))
+        if (! isset($params['cart_id']))
         {
-            $params[''] = '';
+            $params['cart_id'] = '0';
+        }
+        
+        if (! isset($params['customer_id']))
+        {
+            $params['customer_id'] = '0';
+        }
+        
+        if (! isset($params['total']))
+        {
+            $params['total'] = '0.00';
+        }
+        
+        if (! isset($params['total_paid']))
+        {
+            $params['total_paid'] = '0.00';
+        }
+        
+        if (! isset($params['return']))
+        {
+            $params['return'] = '0';
+        }
+        
+        if (! isset($params['invoice_date']))
+        {
+            $params['invoice_date'] = '0001-01-01 00:00:00';
+        }
+        
+        if (! isset($params['delivery_date']))
+        {
+            $params['delivery_date'] = '0001-01-01 00:00:00';
         }
 		
 		$function = 'Order';
@@ -509,9 +544,39 @@ class EhrlichAndreas_StockCms_Module extends EhrlichAndreas_AbstractCms_Module
             $params['enabled'] = '1';
         }
         
-        if (! isset($params['']))
+        if (! isset($params['order_id']))
         {
-            $params[''] = '';
+            $params['order_id'] = '0';
+        }
+        
+        if (! isset($params['product_id']))
+        {
+            $params['product_id'] = '0';
+        }
+        
+        if (! isset($params['product_quantity']))
+        {
+            $params['product_quantity'] = '0';
+        }
+        
+        if (! isset($params['product_quantity_return']))
+        {
+            $params['product_quantity_return'] = '0';
+        }
+        
+        if (! isset($params['total']))
+        {
+            $params['total'] = '0.00';
+        }
+        
+        if (! isset($params['total_paid']))
+        {
+            $params['total_paid'] = '0.00';
+        }
+        
+        if (! isset($params['return']))
+        {
+            $params['return'] = '0';
         }
 		
 		$function = 'OrderDetail';
@@ -547,9 +612,19 @@ class EhrlichAndreas_StockCms_Module extends EhrlichAndreas_AbstractCms_Module
             $params['enabled'] = '1';
         }
         
-        if (! isset($params['']))
+        if (! isset($params['order_id']))
         {
-            $params[''] = '';
+            $params['order_id'] = '0';
+        }
+        
+        if (! isset($params['customer_id']))
+        {
+            $params['customer_id'] = '0';
+        }
+        
+        if (! isset($params['message']))
+        {
+            $params['message'] = '';
         }
 		
 		$function = 'OrderReturn';
@@ -585,9 +660,34 @@ class EhrlichAndreas_StockCms_Module extends EhrlichAndreas_AbstractCms_Module
             $params['enabled'] = '1';
         }
         
-        if (! isset($params['']))
+        if (! isset($params['order_id']))
         {
-            $params[''] = '';
+            $params['order_id'] = '0';
+        }
+        
+        if (! isset($params['customer_id']))
+        {
+            $params['customer_id'] = '0';
+        }
+        
+        if (! isset($params['product_id']))
+        {
+            $params['product_id'] = '0';
+        }
+        
+        if (! isset($params['order_detail_id']))
+        {
+            $params['order_detail_id'] = '0';
+        }
+        
+        if (! isset($params['order_return_id']))
+        {
+            $params['order_return_id'] = '0';
+        }
+        
+        if (! isset($params['product_quantity']))
+        {
+            $params['product_quantity'] = '0';
         }
 		
 		$function = 'OrderReturnDetail';
@@ -623,9 +723,19 @@ class EhrlichAndreas_StockCms_Module extends EhrlichAndreas_AbstractCms_Module
             $params['enabled'] = '1';
         }
         
-        if (! isset($params['']))
+        if (! isset($params['name']))
         {
-            $params[''] = '';
+            $params['name'] = '';
+        }
+        
+        if (! isset($params['product_quantity']))
+        {
+            $params['product_quantity'] = '0';
+        }
+        
+        if (! isset($params['price']))
+        {
+            $params['price'] = '0.00';
         }
 		
 		$function = 'Product';
