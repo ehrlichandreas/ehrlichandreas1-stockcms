@@ -48,57 +48,57 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
      * @var string
      */
     private $tableProduct = 'stock_product';
-	
-	/**
-	 *
-	 * @var string 
-	 */
-	protected $tableVersion = 'stock_version';
-	
+    
+    /**
+     *
+     * @var string 
+     */
+    protected $tableVersion = 'stock_version';
+    
     /**
      * 
      * @return \EhrlichAndreas_KeyvalueCms_Adapter_Pdo_Mysql
      */
-	public function install ()
+    public function install ()
     {
         $this->_install_version_10000();
         
         return $this;
     }
-	
-	/**
-	 * 
-	 * @return GoldAg_LottoCms_Adapter_Pdo_Mysql
-	 */
-	protected function _install_version_10000 ()
-	{
-		$version = '10000';
-		
-		$dbAdapter = $this->getConnection();
+    
+    /**
+     * 
+     * @return GoldAg_LottoCms_Adapter_Pdo_Mysql
+     */
+    protected function _install_version_10000 ()
+    {
+        $version = '10000';
+        
+        $dbAdapter = $this->getConnection();
         
         $tableVersion = $this->getTableName($this->tableVersion);
-		
-		$versionDb = $this->_getVersion($dbAdapter, $tableVersion);
-		
-		if ($versionDb >= $version)
-		{
-			return $this;
-		}
-		
+        
+        $versionDb = $this->_getVersion($dbAdapter, $tableVersion);
+        
+        if ($versionDb >= $version)
+        {
+            return $this;
+        }
+        
         $tableCart = $this->getTableName($this->tableCart);
-		
+        
         $tableCartProduct = $this->getTableName($this->tableCartProduct);
-		
+        
         $tableOrder = $this->getTableName($this->tableOrder);
-		
+        
         $tableOrderDetail = $this->getTableName($this->tableOrderDetail);
-		
+        
         $tableOrderReturn = $this->getTableName($this->tableOrderReturn);
-		
+        
         $tableOrderReturnDetail = $this->getTableName($this->tableOrderReturnDetail);
-		
+        
         $tableProduct = $this->getTableName($this->tableProduct);
-		
+        
         $query = array();
 
         $query[] = 'CREATE TABLE IF NOT EXISTS `%table%` ';
@@ -115,8 +115,8 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
         $query = implode("\n", $query);
         
         $queryVersion = $query;
-		
-		$queryVersion = str_replace('%table%', $tableVersion, $queryVersion);
+        
+        $queryVersion = str_replace('%table%', $tableVersion, $queryVersion);
 
         
         $query = array();
@@ -138,8 +138,8 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
         $query = implode("\n", $query);
         
         $queryCart = $query;
-		
-		$queryCart = str_replace('%table%', $tableCart, $queryCart);
+        
+        $queryCart = str_replace('%table%', $tableCart, $queryCart);
 
         
         $query = array();
@@ -150,8 +150,10 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
         $query[] = '`published` DATETIME NOT NULL DEFAULT \'0001-01-01 00:00:00\', ';
         $query[] = '`updated` DATETIME NOT NULL DEFAULT \'0001-01-01 00:00:00\', ';
         $query[] = '`enabled` INT(5) NOT NULL DEFAULT \'0\', ';
+        $query[] = '`customer_id` BIGINT(19) NOT NULL DEFAULT \'0\', ';
         $query[] = '`cart_id` BIGINT(19) NOT NULL DEFAULT \'0\', ';
         $query[] = '`product_id` BIGINT(19) NOT NULL DEFAULT \'0\', ';
+        $query[] = '`product_quantity` BIGINT(19) NOT NULL DEFAULT \'0\', ';
         $query[] = 'PRIMARY KEY (`cart_product_id`) ';
         $query[] = ') ';
         $query[] = 'ENGINE = InnoDB ';
@@ -162,8 +164,8 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
         $query = implode("\n", $query);
         
         $queryCartProduct = $query;
-		
-		$queryCartProduct = str_replace('%table%', $tableCartProduct, $queryCartProduct);
+        
+        $queryCartProduct = str_replace('%table%', $tableCartProduct, $queryCartProduct);
 
         
         $query = array();
@@ -191,8 +193,8 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
         $query = implode("\n", $query);
         
         $queryOrder = $query;
-		
-		$queryOrder = str_replace('%table%', $tableOrder, $queryOrder);
+        
+        $queryOrder = str_replace('%table%', $tableOrder, $queryOrder);
 
         
         $query = array();
@@ -220,8 +222,8 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
         $query = implode("\n", $query);
         
         $queryOrderDetail = $query;
-		
-		$queryOrderDetail = str_replace('%table%', $tableOrderDetail, $queryOrderDetail);
+        
+        $queryOrderDetail = str_replace('%table%', $tableOrderDetail, $queryOrderDetail);
 
         
         $query = array();
@@ -245,8 +247,8 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
         $query = implode("\n", $query);
         
         $queryOrderReturn = $query;
-		
-		$queryOrderReturn = str_replace('%table%', $tableOrderReturn, $queryOrderReturn);
+        
+        $queryOrderReturn = str_replace('%table%', $tableOrderReturn, $queryOrderReturn);
 
         
         $query = array();
@@ -273,8 +275,8 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
         $query = implode("\n", $query);
         
         $queryOrderReturnDetail = $query;
-		
-		$queryOrderReturnDetail = str_replace('%table%', $tableOrderReturnDetail, $queryOrderReturnDetail);
+        
+        $queryOrderReturnDetail = str_replace('%table%', $tableOrderReturnDetail, $queryOrderReturnDetail);
 
         
         $query = array();
@@ -298,72 +300,72 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
         $query = implode("\n", $query);
         
         $queryProduct = $query;
-		
-		$queryProduct = str_replace('%table%', $tableProduct, $queryProduct);
-		
-		
-		if ($versionDb < $version)
-		{
-			$query = $queryVersion;
-			
-			$stmt = $dbAdapter->query($query);
+        
+        $queryProduct = str_replace('%table%', $tableProduct, $queryProduct);
+        
+        
+        if ($versionDb < $version)
+        {
+            $query = $queryVersion;
             
-			$stmt->closeCursor();
-			
+            $stmt = $dbAdapter->query($query);
             
-			$query = $queryCart;
-			
-			$stmt = $dbAdapter->query($query);
+            $stmt->closeCursor();
             
-			$stmt->closeCursor();
-			
             
-			$query = $queryCartProduct;
-			
-			$stmt = $dbAdapter->query($query);
+            $query = $queryCart;
             
-			$stmt->closeCursor();
-			
+            $stmt = $dbAdapter->query($query);
             
-			$query = $queryOrder;
-			
-			$stmt = $dbAdapter->query($query);
+            $stmt->closeCursor();
             
-			$stmt->closeCursor();
-			
             
-			$query = $queryOrderDetail;
-			
-			$stmt = $dbAdapter->query($query);
+            $query = $queryCartProduct;
             
-			$stmt->closeCursor();
-			
+            $stmt = $dbAdapter->query($query);
             
-			$query = $queryOrderReturn;
-			
-			$stmt = $dbAdapter->query($query);
+            $stmt->closeCursor();
             
-			$stmt->closeCursor();
-			
             
-			$query = $queryOrderReturnDetail;
-			
-			$stmt = $dbAdapter->query($query);
+            $query = $queryOrder;
             
-			$stmt->closeCursor();
-			
+            $stmt = $dbAdapter->query($query);
             
-			$query = $queryProduct;
-			
-			$stmt = $dbAdapter->query($query);
+            $stmt->closeCursor();
             
-			$stmt->closeCursor();
-			
             
-			$this->_setVersion($dbAdapter, $tableVersion, $version);
-		}
-		
-		return $this;
-	}
+            $query = $queryOrderDetail;
+            
+            $stmt = $dbAdapter->query($query);
+            
+            $stmt->closeCursor();
+            
+            
+            $query = $queryOrderReturn;
+            
+            $stmt = $dbAdapter->query($query);
+            
+            $stmt->closeCursor();
+            
+            
+            $query = $queryOrderReturnDetail;
+            
+            $stmt = $dbAdapter->query($query);
+            
+            $stmt->closeCursor();
+            
+            
+            $query = $queryProduct;
+            
+            $stmt = $dbAdapter->query($query);
+            
+            $stmt->closeCursor();
+            
+            
+            $this->_setVersion($dbAdapter, $tableVersion, $version);
+        }
+        
+        return $this;
+    }
 }
 

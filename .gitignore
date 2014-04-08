@@ -12,3 +12,6 @@ phpunit.xml
 
 !src/*
 !tests/*
+
+tests/_errorlog/
+tests/_errorlog/*

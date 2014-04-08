@@ -60,7 +60,11 @@
         "ehrlichandreas/ehrlichandreas1-pdo":           "dev-master",
         "ehrlichandreas/ehrlichandreas1-util":          "dev-master",
         
-        "ehrlichandreas/ehrlichandreas1-keyvaluecms":   "dev-master"
+        "ehrlichandreas/ehrlichandreas1-keyvaluecms":   "dev-master",
+
+        "zendframework/zendframework1" :                "1.*",
+
+        "zendframework/zendframework" :                 "2.*"
     },
     "require-dev":
     {
