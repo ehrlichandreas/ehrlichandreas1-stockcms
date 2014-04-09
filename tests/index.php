@@ -69,3 +69,17 @@ $count = 4;
 
 $strockCms->addProductToCart($customer_id, $product_id, $count);
 
+sleep(10);
+
+$strockCms->editProductInCart($customer_id, $product_id, $count);
+
+sleep(5);
+
+$strockCms->deleteProductFromCart($customer_id, $product_id);
+
+sleep(5);
+
+$customer_id = '7';
+
+$strockCms->emptyCart($customer_id);
+
