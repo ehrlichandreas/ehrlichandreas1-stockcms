@@ -56,6 +56,84 @@ catch (Exception $e)
     echo $e;
 }
 
+$products = array
+(
+    array
+    (
+        'product_id'        => '12',
+        'price'             => '7.00',
+        'product_quantity'  => '5000',
+    ),
+    array
+    (
+        'product_id'        => '19',
+        'price'             => '13.00',
+        'product_quantity'  => '500',
+    ),
+    array
+    (
+        'product_id'        => '23',
+        'price'             => '18.00',
+        'product_quantity'  => '50',
+    ),
+);
+
+foreach ($products as $product)
+{
+    #$strockCms->addProductToStock($product);
+}
+
+$productsCart = array
+(
+    array
+    (
+        'customer_id'   => '7',
+        'product_id'    => '12',
+        'count'         => '34',
+    ),
+    array
+    (
+        'customer_id'   => '7',
+        'product_id'    => '19',
+        'count'         => '23',
+    ),
+    array
+    (
+        'customer_id'   => '7',
+        'product_id'    => '23',
+        'count'         => '2',
+    ),
+    array
+    (
+        'customer_id'   => '9',
+        'product_id'    => '19',
+        'count'         => '5',
+    ),
+    array
+    (
+        'customer_id'   => '3',
+        'product_id'    => '12',
+        'count'         => '65',
+    ),
+);
+
+foreach ($productsCart as $productCart)
+{
+    $customer_id = $productCart['customer_id'];
+    
+    $product_id = $productCart['product_id'];
+    
+    $count = $productCart['count'];
+    
+    $strockCms->addProductToCart($customer_id, $product_id, $count);
+}
+
+$customer_id = '7';
+
+$strockCms->createOrderFromCart($customer_id);
+
+die();
+
 $customer_id = '12';
 
 $product_id = array
