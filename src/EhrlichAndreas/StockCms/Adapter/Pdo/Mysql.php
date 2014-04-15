@@ -57,7 +57,7 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
     
     /**
      * 
-     * @return \EhrlichAndreas_KeyvalueCms_Adapter_Pdo_Mysql
+     * @return EhrlichAndreas_StockCms_Adapter_Pdo_Mysql
      */
     public function install ()
     {
@@ -68,7 +68,7 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
     
     /**
      * 
-     * @return GoldAg_LottoCms_Adapter_Pdo_Mysql
+     * @return EhrlichAndreas_StockCms_Adapter_Pdo_Mysql
      */
     protected function _install_version_10000 ()
     {
