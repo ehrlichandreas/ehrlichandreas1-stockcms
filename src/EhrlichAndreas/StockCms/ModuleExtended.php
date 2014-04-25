@@ -459,9 +459,13 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
                 'cart_id'           => $cart_id,
                 'product_id'        => $rowCartProduct['product_id'],
                 'product_quantity'  => $rowCartProduct['product_quantity'],
-                'total'             => $rowCartProduct['total'],
                 'enabled'           => '1',
             );
+            
+            if (isset($rowCartProduct['total']))
+            {
+                $param['total'] = $rowCartProduct['total'];
+            }
             
             $this->addOrderDetail($param);
         }
