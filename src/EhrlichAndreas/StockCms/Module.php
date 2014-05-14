@@ -180,6 +180,8 @@ class EhrlichAndreas_StockCms_Module extends EhrlichAndreas_AbstractCms_Module
             'customer_id'       => 'customer_id',
             'product_id'        => 'product_id',
             'product_quantity'  => 'product_quantity',
+            'extern_id'         => 'extern_id',
+            'extern_id_type'    => 'extern_id_type',
         );
     }
 
@@ -224,6 +226,8 @@ class EhrlichAndreas_StockCms_Module extends EhrlichAndreas_AbstractCms_Module
             'total'                     => 'total',
             'total_paid'                => 'total_paid',
             'return'                    => 'return',
+            'extern_id'                 => 'extern_id',
+            'extern_id_type'            => 'extern_id_type',
         );
     }
 
@@ -263,6 +267,8 @@ class EhrlichAndreas_StockCms_Module extends EhrlichAndreas_AbstractCms_Module
             'order_detail_id'           => 'order_detail_id',
             'order_return_id'           => 'order_return_id',
             'product_quantity'          => 'product_quantity',
+            'extern_id'                 => 'extern_id',
+            'extern_id_type'            => 'extern_id_type',
         );
     }
 
@@ -281,6 +287,8 @@ class EhrlichAndreas_StockCms_Module extends EhrlichAndreas_AbstractCms_Module
             'product_quantity'  => 'product_quantity',
             'price'             => 'price',
             'name'              => 'name',
+            'extern_id'         => 'extern_id',
+            'extern_id_type'    => 'extern_id_type',
         );
     }
 
@@ -454,6 +462,16 @@ class EhrlichAndreas_StockCms_Module extends EhrlichAndreas_AbstractCms_Module
             $params['product_quantity'] = '0';
         }
         
+        if (! isset($params['extern_id']))
+        {
+            $params['extern_id'] = '0';
+        }
+        
+        if (! isset($params['extern_id_type']))
+        {
+            $params['extern_id_type'] = '0';
+        }
+        
         $function = 'CartProduct';
         
         return $this->_add($function, $params, $returnAsString);
@@ -590,6 +608,16 @@ class EhrlichAndreas_StockCms_Module extends EhrlichAndreas_AbstractCms_Module
             $params['return'] = '0';
         }
         
+        if (! isset($params['extern_id']))
+        {
+            $params['extern_id'] = '0';
+        }
+        
+        if (! isset($params['extern_id_type']))
+        {
+            $params['extern_id_type'] = '0';
+        }
+        
         $function = 'OrderDetail';
         
         return $this->_add($function, $params, $returnAsString);
@@ -699,6 +727,16 @@ class EhrlichAndreas_StockCms_Module extends EhrlichAndreas_AbstractCms_Module
         if (! isset($params['product_quantity']))
         {
             $params['product_quantity'] = '0';
+        }
+        
+        if (! isset($params['extern_id']))
+        {
+            $params['extern_id'] = '0';
+        }
+        
+        if (! isset($params['extern_id_type']))
+        {
+            $params['extern_id_type'] = '0';
         }
         
         $function = 'OrderReturnDetail';

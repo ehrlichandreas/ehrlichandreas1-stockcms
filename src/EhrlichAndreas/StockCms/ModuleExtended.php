@@ -8,6 +8,28 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
 {
     /**
      * 
+     * @param string $count
+     * @return mixed
+     */
+    protected function _getCount($count)
+    {
+        if (is_array($count))
+        {
+            if (isset($count['count']))
+            {
+                $count = $count['count'];
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        return $count;
+    }
+    
+    /**
+     * 
      * @param string $customer_id
      * @return mixed
      */
@@ -86,13 +108,66 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
     
     /**
      * 
-     * @param string $customer_id
-     * @param string $product_id
+     * @param string $extern_id
      * @return mixed
      */
-    public function addProductToStock($product)
+    protected function _getExternId($extern_id)
+    {
+        if (is_array($extern_id))
+        {
+            if (isset($extern_id['extern_id']))
+            {
+                $extern_id = $extern_id['extern_id'];
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        return $extern_id;
+    }
+    
+    /**
+     * 
+     * @param string $extern_id
+     * @return mixed
+     */
+    protected function _getExternIdType($extern_id_type)
+    {
+        if (is_array($extern_id_type))
+        {
+            if (isset($extern_id_type['extern_id_type']))
+            {
+                $extern_id_type = $extern_id_type['extern_id_type'];
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        return $extern_id_type;
+    }
+    
+    /**
+     * 
+     * @param string $product
+     * @param boolean $checkExtern
+     * @return mixed
+     */
+    public function addProductToStock($product, $checkExtern = false)
     {
         $product_id_tmp = $this->_getProductId($product);
+        
+        $extern_id_tmp = $this->_getExternId($product);
+        
+        $extern_id_type_tmp = $this->_getExternIdType($product);
+        
+        if ($checkExtern && $extern_id_tmp === false)
+        {
+            return false;
+        }
         
         if ($product_id_tmp === false)
         {
@@ -152,29 +227,82 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
             $param['price'] = abs($product['price']);
         }
         
+        if ($extern_id_tmp !== false)
+        {
+            $param['extern_id'] = $extern_id_tmp;
+        }
+        
+        if ($extern_id_type_tmp !== false)
+        {
+            $param['extern_id_type'] = $extern_id_type_tmp;
+        }
+        
         return $this->editProduct($param);
     }
     
     /**
      * 
-     * @param string $customer_id
-     * @param string $product_id
+     * @param string $product
+     * @param boolean $checkExtern
      * @return mixed
      */
-    public function addProductToCart($customer_id, $product_id, $count = 1)
+    public function addProductToCart($product, $checkExtern = false)
     {
-        $customer_id_tmp = $this->_getCustomerId($customer_id);
+        $customer_id_tmp = $this->_getCustomerId($product);
         
-        $product_id_tmp = $this->_getProductId($product_id);
+        $product_id_tmp = $this->_getProductId($product);
+        
+        $extern_id_tmp = $this->_getExternId($product);
+        
+        $extern_id_type_tmp = $this->_getExternIdType($product);
+        
+        $count = $this->_getCount($product);
+        
+        if ($checkExtern && $extern_id_tmp === false)
+        {
+            return false;
+        }
         
         if ($customer_id_tmp === false)
         {
             return false;
         }
         
-        if ($product_id_tmp === false)
+        if ($extern_id_tmp === false && $product_id_tmp === false)
         {
             return false;
+        }
+        
+        if ($count === false)
+        {
+            $count = 1;
+        }
+        
+        if ($product_id_tmp === false)
+        {
+            $param = array
+            (
+                'cols'  => array
+                (
+                    'product_id'    => 'product_id',
+                ),
+                'where' => array
+                (
+                    'extern_id'         => $extern_id_tmp,
+                    'extern_id_type'    => $extern_id_type_tmp,
+                ),
+            );
+            
+            $rowset = $this->getProductList($param);
+            
+            if (count($rowset) == 0)
+            {
+                return false;
+            }
+            else
+            {
+                $product_id_tmp = $rowset[0]['product_id'];
+            }
         }
         
         $customer_id = $customer_id_tmp;
@@ -182,11 +310,6 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
         $product_id = $product_id_tmp;
         
         $count = abs($count);
-        
-        if ($count == 0)
-        {
-            return false;
-        }
         
         $cart_id = $this->_getCartId($customer_id);
         
@@ -214,6 +337,16 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
                 'product_quantity'  => $count,
                 'enabled'           => '1',
             );
+        
+            if ($extern_id_tmp !== false)
+            {
+                $param['extern_id'] = $extern_id_tmp;
+            }
+
+            if ($extern_id_type_tmp !== false)
+            {
+                $param['extern_id_type'] = $extern_id_type_tmp;
+            }
 
             return (bool) $this->addCartProduct($param);
         }
@@ -239,20 +372,62 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
         }
     }
     
-    public function deleteProductFromCart($customer_id, $product_id)
+    /**
+     * 
+     * @param string $product
+     * @param boolean $checkExtern
+     * @return mixed
+     */
+    public function deleteProductFromCart($product, $checkExtern = false)
     {
-        $customer_id_tmp = $this->_getCustomerId($customer_id);
+        $customer_id_tmp = $this->_getCustomerId($product);
         
-        $product_id_tmp = $this->_getProductId($product_id);
+        $product_id_tmp = $this->_getProductId($product);
+        
+        $extern_id_tmp = $this->_getExternId($product);
+        
+        $extern_id_type_tmp = $this->_getExternIdType($product);
+        
+        if ($checkExtern && $extern_id_tmp === false)
+        {
+            return false;
+        }
         
         if ($customer_id_tmp === false)
         {
             return false;
         }
         
-        if ($product_id_tmp === false)
+        if ($extern_id_tmp === false && $product_id_tmp === false)
         {
             return false;
+        }
+        
+        if ($product_id_tmp === false)
+        {
+            $param = array
+            (
+                'cols'  => array
+                (
+                    'product_id'    => 'product_id',
+                ),
+                'where' => array
+                (
+                    'extern_id'         => $extern_id_tmp,
+                    'extern_id_type'    => $extern_id_type_tmp,
+                ),
+            );
+            
+            $rowset = $this->getProductList($param);
+            
+            if (count($rowset) == 0)
+            {
+                return false;
+            }
+            else
+            {
+                $product_id_tmp = $rowset[0]['product_id'];
+            }
         }
         
         $customer_id = $customer_id_tmp;
@@ -275,20 +450,69 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
         return (bool) $this->deleteCartProduct($param);
     }
     
-    public function editProductInCart($customer_id, $product_id, $count = 1)
+    /**
+     * 
+     * @param string $product
+     * @param boolean $checkExtern
+     * @return mixed
+     */
+    public function editProductInCart($product, $checkExtern = false)
     {
-        $customer_id_tmp = $this->_getCustomerId($customer_id);
+        $customer_id_tmp = $this->_getCustomerId($product);
         
-        $product_id_tmp = $this->_getProductId($product_id);
+        $product_id_tmp = $this->_getProductId($product);
+        
+        $extern_id_tmp = $this->_getExternId($product);
+        
+        $extern_id_type_tmp = $this->_getExternIdType($product);
+        
+        $count = $this->_getCount($product);
+        
+        if ($checkExtern && $extern_id_tmp === false)
+        {
+            return false;
+        }
         
         if ($customer_id_tmp === false)
         {
             return false;
         }
         
-        if ($product_id_tmp === false)
+        if ($extern_id_tmp === false && $product_id_tmp === false)
         {
             return false;
+        }
+        
+        if ($count === false)
+        {
+            $count = 1;
+        }
+        
+        if ($product_id_tmp === false)
+        {
+            $param = array
+            (
+                'cols'  => array
+                (
+                    'product_id'    => 'product_id',
+                ),
+                'where' => array
+                (
+                    'extern_id'         => $extern_id_tmp,
+                    'extern_id_type'    => $extern_id_type_tmp,
+                ),
+            );
+            
+            $rowset = $this->getProductList($param);
+            
+            if (count($rowset) == 0)
+            {
+                return false;
+            }
+            else
+            {
+                $product_id_tmp = $rowset[0]['product_id'];
+            }
         }
         
         $customer_id = $customer_id_tmp;
@@ -328,6 +552,16 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
                 'product_quantity'  => $count,
                 'enabled'           => '1',
             );
+        
+            if ($extern_id_tmp !== false)
+            {
+                $param['extern_id'] = $extern_id_tmp;
+            }
+
+            if ($extern_id_type_tmp !== false)
+            {
+                $param['extern_id_type'] = $extern_id_type_tmp;
+            }
 
             return (bool) $this->addCartProduct($param);
         }
@@ -353,6 +587,11 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
         }
     }
     
+    /**
+     * 
+     * @param string $customer_id
+     * @return mixed
+     */
     public function emptyCart($customer_id)
     {
         $customer_id_tmp = $this->_getCustomerId($customer_id);
@@ -379,6 +618,11 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
         return (bool) $this->deleteCartProduct($param);
     }
     
+    /**
+     * 
+     * @param string $customer_id
+     * @return mixed
+     */
     public function createOrderFromCart($customer_id)
     {
         $customer_id_tmp = $this->_getCustomerId($customer_id);
@@ -459,6 +703,8 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
                 'cart_id'           => $cart_id,
                 'product_id'        => $rowCartProduct['product_id'],
                 'product_quantity'  => $rowCartProduct['product_quantity'],
+                'extern_id'         => $rowCartProduct['extern_id'],
+                'extern_id_type'    => $rowCartProduct['extern_id_type'],
                 'enabled'           => '1',
             );
             

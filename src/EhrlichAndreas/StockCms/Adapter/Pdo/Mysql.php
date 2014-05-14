@@ -367,5 +367,67 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
         
         return $this;
     }
+    
+    /**
+     * 
+     * @return EhrlichAndreas_StockCms_Adapter_Pdo_Mysql
+     */
+    protected function _install_version_10001 ()
+    {
+        $version = '10001';
+        
+        $dbAdapter = $this->getConnection();
+        
+        $tableVersion = $this->getTableName($this->tableVersion);
+        
+        $versionDb = $this->_getVersion($dbAdapter, $tableVersion);
+        
+        if ($versionDb >= $version)
+        {
+            return $this;
+        }
+        
+        $tableCartProduct = $this->getTableName($this->tableCartProduct);
+        
+        $tableOrderDetail = $this->getTableName($this->tableOrderDetail);
+        
+        $tableOrderReturnDetail = $this->getTableName($this->tableOrderReturnDetail);
+        
+        $tableProduct = $this->getTableName($this->tableProduct);
+        
+        $queries = array();
+        
+        
+        $query = array();
+
+        $query[] = 'ALTER TABLE `%table%` ';
+        $query[] = 'ADD ';
+        $query[] = '`extern_id` BIGINT(19) NOT NULL DEFAULT \'0\', ';
+        $query[] = 'ADD ';
+        $query[] = '`extern_id_type` BIGINT(19) NOT NULL DEFAULT \'0\'; ';
+		
+		$queries[] = str_replace('%table%', $tableCartProduct, implode("\n", $query));
+		
+		$queries[] = str_replace('%table%', $tableOrderDetail, implode("\n", $query));
+		
+		$queries[] = str_replace('%table%', $tableOrderReturnDetail, implode("\n", $query));
+		
+		$queries[] = str_replace('%table%', $tableProduct, implode("\n", $query));
+        
+        
+        if ($versionDb < $version)
+        {
+            foreach ($queries as $query)
+            {
+                $stmt = $dbAdapter->query($query);
+
+                $stmt->closeCursor();
+            }
+            
+            $this->_setVersion($dbAdapter, $tableVersion, $version);
+        }
+        
+        return $this;
+    }
 }
 
