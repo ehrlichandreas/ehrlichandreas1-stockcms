@@ -30,7 +30,7 @@ $dbConfig = array
         'port'      => '8889',
 		'username'	=> 'root',
 		'password'	=> 'root',
-		'dbname'	=> 'tests',
+		'dbname'	=> 'cfp',
 		'charset'	=> 'utf8',
 	),
 );
@@ -40,12 +40,11 @@ $dbConnection = EhrlichAndreas_Db_Db::factory($dbConfig);
 $stockCmsConfig = array
 (
     'db'                => $dbConnection,
-    'dbtableprefix'     => '__test',
+    //'dbtableprefix'     => '__test',
 );
 
 $strockCms = new EhrlichAndreas_StockCms_ModuleExtended($stockCmsConfig);
 
-echo '<pre>';
 
 try
 {
@@ -61,18 +60,21 @@ $products = array
     array
     (
         'product_id'        => '12',
+        'extern_id'         => '182',
         'price'             => '7.00',
         'product_quantity'  => '5000',
     ),
     array
     (
         'product_id'        => '19',
+        'extern_id'         => '34523',
         'price'             => '13.00',
         'product_quantity'  => '500',
     ),
     array
     (
         'product_id'        => '23',
+        'extern_id'         => '433',
         'price'             => '18.00',
         'product_quantity'  => '50',
     ),
@@ -80,7 +82,30 @@ $products = array
 
 foreach ($products as $product)
 {
-    #$strockCms->addProductToStock($product);
+    $param = array
+    (
+        'cols'  => array
+        (
+            'count' => new EhrlichAndreas_Db_Expr('count(product_id)'),
+        ),
+        'where' => array
+        (
+            'extern_id' => $product['extern_id'],
+        ),
+        'limit' => '1',
+    );
+    
+    if (isset($product['extern_id_type']))
+    {
+        $param['where']['extern_id_type'] = $product['extern_id_type'];
+    }
+    
+    $rowset = $strockCms->getProduct($param);
+    
+    if (empty($rowset) || !isset($rowset[0]['count']) || $rowset[0]['count'] == 0)
+    {
+        $strockCms->addProductToStock($product, true);
+    }
 }
 
 $productsCart = array
@@ -88,76 +113,68 @@ $productsCart = array
     array
     (
         'customer_id'   => '7',
-        'product_id'    => '12',
+        'extern_id'     => '182',
         'count'         => '34',
     ),
     array
     (
         'customer_id'   => '7',
-        'product_id'    => '19',
+        'extern_id'     => '34523',
         'count'         => '23',
     ),
     array
     (
         'customer_id'   => '7',
-        'product_id'    => '23',
+        'extern_id'     => '433',
         'count'         => '2',
     ),
     array
     (
         'customer_id'   => '9',
-        'product_id'    => '19',
+        'extern_id'     => '34523',
         'count'         => '5',
     ),
     array
     (
         'customer_id'   => '3',
-        'product_id'    => '12',
+        'extern_id'     => '182',
         'count'         => '65',
     ),
 );
 
 foreach ($productsCart as $productCart)
 {
-    $customer_id = $productCart['customer_id'];
-    
-    $product_id = $productCart['product_id'];
-    
-    $count = $productCart['count'];
-    
-    $strockCms->addProductToCart($customer_id, $product_id, $count);
+    //$strockCms->addProductToCart($productCart);
 }
 
 $customer_id = '7';
 
 $strockCms->createOrderFromCart($customer_id);
 
-die();
+sleep(10);
 
-$customer_id = '12';
-
-$product_id = array
+$productCart = array
 (
-    'product_id' => '18',
+    'customer_id'   => '12',
+    'extern_id'     => '182',
+    'count'         => '4',
 );
 
-$product_id = '10';
-
-$count = 4;
-
-$strockCms->addProductToCart($customer_id, $product_id, $count);
+$strockCms->addProductToCart($productCart);
 
 sleep(10);
 
-$strockCms->editProductInCart($customer_id, $product_id, $count);
+$productCart['count'] = 10;
+
+$strockCms->editProductInCart($productCart);
 
 sleep(5);
 
-$strockCms->deleteProductFromCart($customer_id, $product_id);
+$strockCms->deleteProductFromCart($productCart);
 
 sleep(5);
 
-$customer_id = '7';
+$productCart['customer_id'] = 9;
 
-$strockCms->emptyCart($customer_id);
+$strockCms->emptyCart($productCart['customer_id']);
 
