@@ -144,14 +144,38 @@ $productsCart = array
 
 foreach ($productsCart as $productCart)
 {
-    //$strockCms->addProductToCart($productCart);
+    $param = array
+    (
+        'cols'  => array
+        (
+            'count' => new EhrlichAndreas_Db_Expr('count(cart_product_id)'),
+        ),
+        'where' => array
+        (
+            'customer_id'   => $productCart['customer_id'],
+            'extern_id'     => $productCart['extern_id'],
+        ),
+        'limit' => '1',
+    );
+    
+    if (isset($productCart['extern_id_type']))
+    {
+        $param['where']['extern_id_type'] = $productCart['extern_id_type'];
+    }
+    
+    $rowset = $strockCms->getCartProduct($param);
+    
+    if (empty($rowset) || !isset($rowset[0]['count']) || $rowset[0]['count'] == 0)
+    {
+        $strockCms->addProductToCart($productCart, true);
+    }
 }
 
 $customer_id = '7';
 
 $strockCms->createOrderFromCart($customer_id);
 
-sleep(10);
+sleep(5);
 
 $productCart = array
 (
@@ -162,7 +186,7 @@ $productCart = array
 
 $strockCms->addProductToCart($productCart);
 
-sleep(10);
+sleep(5);
 
 $productCart['count'] = 10;
 
@@ -177,4 +201,10 @@ sleep(5);
 $productCart['customer_id'] = 9;
 
 $strockCms->emptyCart($productCart['customer_id']);
+
+sleep(5);
+
+$customer_id = '3';
+
+$strockCms->createOrderFromCart($customer_id);
 
