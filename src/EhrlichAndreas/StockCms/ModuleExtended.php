@@ -717,6 +717,8 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
         }
         
         $this->emptyCart($customer_id);
+        
+        return true;
     }
 }
 

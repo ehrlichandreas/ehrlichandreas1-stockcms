@@ -63,6 +63,8 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
     {
         $this->_install_version_10000();
         
+        $this->_install_version_10001();
+        
         return $this;
     }
     
