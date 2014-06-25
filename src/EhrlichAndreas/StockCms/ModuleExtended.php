@@ -720,5 +720,15 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
         
         return true;
     }
+    
+    /**
+     * 
+     * @param string $order
+     * @return mixed
+     */
+    public function returnOrder($order_id)
+    {
+        
+    }
 }
 
