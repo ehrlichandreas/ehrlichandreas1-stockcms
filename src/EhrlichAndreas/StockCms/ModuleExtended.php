@@ -171,26 +171,32 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
         
         if ($product_id_tmp === false)
         {
-            return $this->addProduct($product);
+            $param = array
+            (
+                'cols'  => array
+                (
+                    'product_id'    => 'product_id',
+                ),
+                'where' => array
+                (
+                    'extern_id'         => $extern_id_tmp,
+                    'extern_id_type'    => $extern_id_type_tmp,
+                ),
+            );
+            
+            $rowset = $this->getProductList($param);
+            
+            if (count($rowset) == 0)
+            {
+                return $this->addProduct($product);
+            }
+            else
+            {
+                $product_id_tmp = $rowset[0]['product_id'];
+            }
         }
         
         $product_id = $product_id_tmp;
-        
-        $param = array
-        (
-            'where' => array
-            (
-                'product_id'    => $product_id,
-                #'enabled'       => '1',
-            ),
-        );
-        
-        $rowset = $this->getProduct($param);
-        
-        if (count($rowset) == 0)
-        {
-            return $this->addProduct($product);
-        }
         
         $param = array
         (
