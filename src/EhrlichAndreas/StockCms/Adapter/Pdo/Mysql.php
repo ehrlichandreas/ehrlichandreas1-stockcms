@@ -65,6 +65,8 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
         
         $this->_install_version_10001();
         
+        $this->_install_version_10002();
+        
         return $this;
     }
     
@@ -413,6 +415,58 @@ class EhrlichAndreas_StockCms_Adapter_Pdo_Mysql extends EhrlichAndreas_AbstractC
 		$queries[] = str_replace('%table%', $tableOrderDetail, implode("\n", $query));
 		
 		$queries[] = str_replace('%table%', $tableOrderReturnDetail, implode("\n", $query));
+		
+		$queries[] = str_replace('%table%', $tableProduct, implode("\n", $query));
+        
+        
+        if ($versionDb < $version)
+        {
+            foreach ($queries as $query)
+            {
+                $stmt = $dbAdapter->query($query);
+
+                $stmt->closeCursor();
+            }
+            
+            $this->_setVersion($dbAdapter, $tableVersion, $version);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * 
+     * @return EhrlichAndreas_StockCms_Adapter_Pdo_Mysql
+     */
+    protected function _install_version_10002 ()
+    {
+        $version = '10002';
+        
+        $dbAdapter = $this->getConnection();
+        
+        $tableVersion = $this->getTableName($this->tableVersion);
+        
+        $versionDb = $this->_getVersion($dbAdapter, $tableVersion);
+        
+        if ($versionDb >= $version)
+        {
+            return $this;
+        }
+        
+        $tableProduct = $this->getTableName($this->tableProduct);
+        
+        $queries = array();
+        
+        
+        $query = array();
+
+        $query[] = 'ALTER TABLE `%table%` ';
+        $query[] = 'ADD ';
+        $query[] = '`ordered` BIGINT(19) NOT NULL DEFAULT \'0\', ';
+        $query[] = 'ADD ';
+        $query[] = '`paid` BIGINT(19) NOT NULL DEFAULT \'0\', ';
+        $query[] = 'ADD ';
+        $query[] = '`returned` BIGINT(19) NOT NULL DEFAULT \'0\'; ';
 		
 		$queries[] = str_replace('%table%', $tableProduct, implode("\n", $query));
         

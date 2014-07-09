@@ -175,7 +175,7 @@ $customer_id = '7';
 
 $strockCms->createOrderFromCart($customer_id);
 
-sleep(5);
+#sleep(5);
 
 $productCart = array
 (
@@ -186,23 +186,23 @@ $productCart = array
 
 $strockCms->addProductToCart($productCart);
 
-sleep(5);
+#sleep(5);
 
 $productCart['count'] = 10;
 
 $strockCms->editProductInCart($productCart);
 
-sleep(5);
+#sleep(5);
 
 $strockCms->deleteProductFromCart($productCart);
 
-sleep(5);
+#sleep(5);
 
 $productCart['customer_id'] = 9;
 
 $strockCms->emptyCart($productCart['customer_id']);
 
-sleep(5);
+#sleep(5);
 
 $customer_id = '3';
 

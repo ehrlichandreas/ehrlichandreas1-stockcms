@@ -289,6 +289,9 @@ class EhrlichAndreas_StockCms_Module extends EhrlichAndreas_AbstractCms_Module
             'name'              => 'name',
             'extern_id'         => 'extern_id',
             'extern_id_type'    => 'extern_id_type',
+            'ordered'           => 'ordered',
+            'paid'              => 'paid',
+            'returned'          => 'returned',
         );
     }
 

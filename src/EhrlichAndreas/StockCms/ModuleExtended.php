@@ -200,6 +200,26 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
         
         $param = array
         (
+            'cols'  => array
+            (
+                'count' => new EhrlichAndreas_Db_Expr('count(product_id)'),
+            ),
+            'where' => array
+            (
+                'product_id'    => $product_id,
+                #'enabled'       => '1',
+            ),
+        );
+        
+        $rowset = $this->getProduct($param);
+        
+        if (count($rowset) == 0 || empty($rowset[0]['count']))
+        {
+            return $this->addProduct($product);
+        }
+        
+        $param = array
+        (
             'where' => array
             (
                 'product_id'    => $product_id,
@@ -700,6 +720,10 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
         
         $order_id = $this->addOrder($param);
         
+        $cellNameProductQuantity = $this->getConnection()->quoteIdentifier('product_quantity');
+        
+        $cellNameOrdered = $this->getConnection()->quoteIdentifier('ordered');
+        
         foreach ($rowsetCartProduct as $rowCartProduct)
         {
             $param = array
@@ -720,6 +744,20 @@ class EhrlichAndreas_StockCms_ModuleExtended extends EhrlichAndreas_StockCms_Mod
             }
             
             $this->addOrderDetail($param);
+            
+            $count = $this->getConnection()->quote($rowCartProduct['product_quantity']);
+            
+            $param = array
+            (
+                'product_quantity'  => new EhrlichAndreas_Db_Expr($cellNameProductQuantity . ' - ' . $count),
+                'ordered'  => new EhrlichAndreas_Db_Expr($cellNameOrdered . ' + ' . $count),
+                'where' => array
+                (
+                    'product_id'    => $rowCartProduct['product_id'],
+                ),
+            );
+            
+            $this->editProduct($param);
         }
         
         $this->emptyCart($customer_id);
